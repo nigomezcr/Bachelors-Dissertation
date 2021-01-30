@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 m_n, m_p, m_e = 1.67e-24, 1.6726219e-24, 9.10938e-28 # 939.5, 938.2 , 0.511 
 l_n, l_p, l_e = 2.1e-14, 1.321e-13, 2.426e-10
 c= 2.998e+10
-hbar = 1.52-27
+hbar = 1.0546e-27
 
 #Parameters
 def N_cgs (m, l):
@@ -58,6 +58,7 @@ E_n = epsilon_i(z_NS, m_n, l_n)
 E_npe = epsilon_NS(z_NS)
 P_n = Pressure_i(z_NS, m_n, l_n)
 P_npe = Pressure_NS(z_NS)
+
 
 
 #Plotting functions

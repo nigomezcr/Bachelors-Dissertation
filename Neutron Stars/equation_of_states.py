@@ -3,6 +3,7 @@ Description: Code to plot the different equations of state of an Ideal Fermi Gas
 """
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.interpolate import interp1d as interpolate
 
 #constants
 m = 1.67e-24
@@ -77,6 +78,9 @@ P_NS = Pressure_NS(z_NS)*N
 EOS_NR = Equation_Of_State_NR(P_NR)
 EOS_R = Equation_Of_State_R(P_R)
 
+Equation_Of_State_NS = interpolate(P_NS, E_NS)
+
+
 
 ##Plots
 def Plot_pressure():
@@ -110,7 +114,7 @@ def Plot_eos():
     plt.savefig('Plots/equation_of_state_n.pdf')
 
 #Output
-Plot_eos()
+#Plot_eos()
 
 
 
