@@ -56,11 +56,13 @@ def Equation_Of_State_NS(P):
         for j in np.arange(9):
             z[i*9+j] = (j+1)*pow(10.,i-3.5)  
         
-    N = mn[SYS]*c[SYS]**2/(np.pi**2*ln[SYS]**3)
+        
+    N = 1#mn[SYS]*c[SYS]**2/(np.pi**2*ln[SYS]**3)
     P_NS = N/8*((2*z**3/3 - z)*np.sqrt(1+z*z) + np.arcsinh(z))
     E_NS = N/8*((2*z**3 + z)*np.sqrt(1+z*z) - np.arcsinh(z))
         
     f = interpolate(P_NS, E_NS)
+    
     return f(P)
   
 
@@ -96,11 +98,13 @@ def Plot_pressure(r, sol):
     plt.ylabel('$P(r) \ [P_c]$')
     plt.grid()
     
-def Plot_density(r, sol, Equation_Of_State):
-    dener = np.zeros(1501)
-    for i in np.arange(1500):
+def Plot_density(r, sol, Equation_Of_State, N_data):
+    dener = np.zeros(N_data+1)
+    for i in np.arange(N_data):
         dener[i] = Equation_Of_State(sol[i,0])
+        print(r[i], sol[i], dener[i])
 
+    """
     plt.title('Density in the NS.')
     plt.plot(r, dener, 'c', label='Newton case, Relativistic EOS')
     plt.legend(loc='best')
@@ -108,24 +112,31 @@ def Plot_density(r, sol, Equation_Of_State):
     plt.ylabel('$\epsilon \ [\epsilon_0]$')
     plt.grid()
     plt.savefig('Plots/density_n_r.pdf')
-    
+    """
     
 #Results
 def main():
     #Initial conditions
     y0 = [Pc[comp], 0]
     #Plotting arrays
-    rmin, rmax, dr = 0, 15, 0.01 
+    rmin, rmax, dr = 0, 2, 0.1 
     rad_array = np.arange(rmin, rmax+dr, dr)
-    Equation_Of_State = Equation_Of_State_R
+    Equation_Of_State = Equation_Of_State_NS
+    
+    
+    N = int((rmax - rmin)/dr)
     
     solution = ode(Newton, y0, rad_array, args=(Equation_Of_State,))
     
+    
+    print(solution[1,1])
+    
+    
     #Plots
-    Plot_density(rad_array, solution, Equation_Of_State)
+    #Plot_density(rad_array, solution, Equation_Of_State, N)
     
     """
-    N = int((rmax - rmin)/dr)
+    
     
     
     
