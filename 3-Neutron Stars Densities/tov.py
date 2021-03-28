@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import odeint as ode
 from scipy.interpolate import interp1d as interpolate
+from scipy.optimize import root_scalar as findroot
 
 
 #Parameters to TOV eqs
@@ -50,22 +51,24 @@ def Equation_Of_State_R(P):
     return 3*P    
 
 def Equation_Of_State_NS(P):
-    POW = 5
-    z = np.zeros(9*POW)
+    POW = 3
+    z_i = np.zeros(9*POW)
+    
     for i in np.arange(POW):
         for j in np.arange(9):
-            z[i*9+j] = (j+1)*pow(10.,i-3.5)  
+            z_i[i*9+j] = (j+1)*pow(10.,i-3)  
         
-        
-    N = 1#mn[SYS]*c[SYS]**2/(np.pi**2*ln[SYS]**3)
+    z = np.insert(z_i, 0, 0)
+    
+    N = 1#*mn[SYS]*c[SYS]**2/(np.pi**2*ln[SYS]**3)
     P_NS = N/8*((2*z**3/3 - z)*np.sqrt(1+z*z) + np.arcsinh(z))
     E_NS = N/8*((2*z**3 + z)*np.sqrt(1+z*z) - np.arcsinh(z))
         
+    
     f = interpolate(P_NS, E_NS)
     
     return f(P)
-  
-
+   
       
 #Hydrostatic Equations
 
@@ -100,9 +103,12 @@ def Plot_pressure(r, sol):
     
 def Plot_density(r, sol, Equation_Of_State, N_data):
     dener = np.zeros(N_data+1)
+    #ec = 7.531304e+35
     for i in np.arange(N_data):
-        dener[i] = Equation_Of_State(sol[i,0])
-        print(r[i], sol[i], dener[i])
+        r[i] = "{:.2f}".format(r[i])
+        dener[i] = "{:.6f}".format(Equation_Of_State(sol[i,0]))
+        sol[i] = "{:.6f}".format(sol[i,0])
+        print(r[i], sol[i,0], dener[i])
 
     """
     plt.title('Density in the NS.')
@@ -118,23 +124,24 @@ def Plot_density(r, sol, Equation_Of_State, N_data):
 def main():
     #Initial conditions
     y0 = [Pc[comp], 0]
-    #Plotting arrays
-    rmin, rmax, dr = 0, 2, 0.1 
-    rad_array = np.arange(rmin, rmax+dr, dr)
-    Equation_Of_State = Equation_Of_State_NS
     
+    #Plotting arrays
+    rmin, rmax, dr = 0, 12.8, 0.1 
+    rad_array = np.arange(rmin, rmax+dr, dr)
+    Equation_Of_State = Equation_Of_State_R
     
     N = int((rmax - rmin)/dr)
     
     solution = ode(Newton, y0, rad_array, args=(Equation_Of_State,))
     
     
-    print(solution[1,1])
+    
+    
     
     
     #Plots
-    #Plot_density(rad_array, solution, Equation_Of_State, N)
-    
+    Plot_density(rad_array, solution, Equation_Of_State, N)
+    #print(Equation_Of_State(0))
     """
     
     
