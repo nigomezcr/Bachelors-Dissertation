@@ -4,10 +4,10 @@
 #include <iostream>
 #include "train.hpp"
 
-const double g = -10;
-const double R = 100;
-const int NSTEPS = 500;
-const double DT = 0.1;
+const double g = -9.81;
+const double R = 6.371e6;
+const int NSTEPS = 2*2291;
+const double DT = 1;
 
 // function declarations
 void initial_conditions(Particle & body);

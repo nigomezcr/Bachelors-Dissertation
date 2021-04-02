@@ -9,8 +9,8 @@ void initial_conditions(Particle & body)
   body.Vx = 0.;
   body.Vy = 0.;
   body.Vz = 0.;
-  body.rad = 0.1;
-  body.mass = 8000;
+  body.rad = 1;
+  body.mass = 1;
 }
 
 void compute_force(Particle & body)
@@ -21,16 +21,21 @@ void compute_force(Particle & body)
 
   // gravitational force
     //Constant density case
-//  body.Fy += body.mass*g*body.Ry/R;
+ // body.Fy += body.mass*g*body.Ry/R;
 
     //Effective density case: analytic form
   double b = 2.37411572646472;
   double c = 0.986950462357128;
   double d = 0.5881369116467612;
-  double num = 3*g*b*(2*R*R - pow(1 - c*body.Ry/R, d+1)*(c*c*(1+d)*(2+d)*body.Ry*body.Ry + 2*c*(1+d)*body.Ry*R + 2*R*R) );
-  double den = pow(c,3)*body.Ry*body.Ry*(6 + 11*d + 6*d*d + d*d*d);
-  body.Fy += body.mass*num/den;
-
+  double normR = fabs(body.Ry);
+  double num = 3*g*b*(2*R*R - pow(1 - c*normR/R, d+1)*(c*c*(1+d)*(2+d)*normR*normR + 2*c*(1+d)*normR*R + 2*R*R) );
+  double den = pow(c,3)*normR*normR*(6 + 11*d + 6*d*d + d*d*d);
+  if( body.Ry > 0){
+    body.Fy += body.mass*num/den;
+  }
+  else{
+    body.Fy -= body.mass*num/den;
+  }
 
 
 }
@@ -57,11 +62,12 @@ void start_integration(Particle & body, const double & dt)
 void print(Particle & body, double time)
 {
   std::cout << time << "  "
-            << body.Rx << "  "
+            //<< body.Rx << "  "
             << body.Ry << "  "
-            << body.Rz << "  "
-            << body.Vx << "  "
+            //<< body.Rz << "  "
+            //<< body.Vx << "  "
             << body.Vy << "  "
-            << body.Vz << "  "
+            //<< body.Vz << "  "
+            << body.Fy << " "
             << "\n";
 }
