@@ -17,5 +17,5 @@ plot: data.csv plots.gp
 	gnuplot plots.gp
 
 clean:
-	rm -f *.o *.x *.txt *.pdf *~
+	rm -f *.o *.x *.txt *~
 
